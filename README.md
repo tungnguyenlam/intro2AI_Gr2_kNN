@@ -3,6 +3,7 @@ This is the repository for the Final Group Project (Introduction to AI) on k-nea
 Members: (Everyone put your info here: Github username - Full name - StudentID - USTH email address)
 hongngoc
 usthTonyNguyen - Nguyen Lam Tung - 23BI14446 - tungnl.23bi14446@usth.edu.vn
+Palm-Pham - Pham Dinh Bao Khoi -
 
 Project requirements: (Need to improve)
 - Implement k-nearest neighbors on a new dataset and train a model on it
