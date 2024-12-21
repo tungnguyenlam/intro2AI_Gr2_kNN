@@ -4,6 +4,7 @@ Members: (Everyone put your info here: Github username - Full name - StudentID -
 hngoc2204 - Nguyen Vu Hong Ngoc - 23BI14345 - ngocnvh.23bi14345@usth.edu.vn
 usthTonyNguyen - Nguyen Lam Tung - 23BI14446 - tungnl.23bi14446@usth.edu.vn
 Palm-Pham - Pham Dinh Bao Khoi - 23BI 
+watermelon-3012 - Le Sy Han - 23BI14150 - hanls.23bi14150@usth.edu.vn
 
 Project requirements: (Need to improve)
 - Implement k-nearest neighbors on a new dataset and train a model on it
