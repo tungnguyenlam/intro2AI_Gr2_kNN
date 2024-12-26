@@ -73,7 +73,7 @@ def calculate_accuracy(validation_set, true_labels):
 import csv
 
 # Read CSV file
-file_name = "/Users/tungnguyenlam/Programming/python3/ml_ds_general/final_intro2AI/AirQualityAndPollutionAssessment/updated_pollution_dataset.csv"
+file_name = "intro2AI_Gr2_kNN/updated_pollution_dataset.csv"
 data = []
 try:
     with open(file_name, "r") as f:
