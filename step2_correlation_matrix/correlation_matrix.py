@@ -73,7 +73,7 @@ def calculate_accuracy(validation_set, true_labels):
 import csv
 
 # Read CSV file
-file_name = "cleaned_pollution_dataset.csv"
+file_name = "final_pollution_dataset.csv"
 data = []
 try:
     with open(file_name, "r") as f:
@@ -125,7 +125,7 @@ except Exception as e:
 
 
 # Create the DataFrame from your dataset
-header = ["Temperature", "Humidity", "PM2.5", "PM10", "NO2", "SO2", "CO", "Proximity_to_Industrial_Areas", "Population_Density", "Air Quality"]
+header = ["Temperature", "Humidity", "PM2.5", "PM10", "NO2", "SO2", "CO", "Proximity", "Population_Density", "Air Quality"]
 df = pd.DataFrame(data, columns=header)
 
 # Exclude non-numeric columns for correlation matrix

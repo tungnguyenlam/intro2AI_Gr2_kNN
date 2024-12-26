@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-data= pd.read_csv('updated_pollution_dataset.csv')
+data= pd.read_csv('final_pollution_dataset.csv')
 x = data['SO2']
 y = data['CO']
 z = data['Proximity_to_Industrial_Areas']
@@ -29,5 +29,6 @@ ax.set_xlabel('SO2')
 ax.set_ylabel('CO')
 ax.set_zlabel('Proximity')
 ax.legend()
-
+plt.title("Air Quality based on SO2, CO and Proximity to Industrial Areas")
+plt.savefig('plot', dpi=300, bbox_inches='tight')
 plt.show()

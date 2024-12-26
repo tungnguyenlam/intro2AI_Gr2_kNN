@@ -1,0 +1,12 @@
+Augment data should not be used
+
+random
+csv
+
+1. Shuffle the data
+Run the first cell in the file preprocess.ipynb
+
+2. Clean the data
+Replace negative values with 0
+With Temperature -> able to have negative values
+

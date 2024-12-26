@@ -132,7 +132,7 @@ def plot_decision_map(training_data, attributes, k, p, grid_step):
     plt.show()
     plt.close()
 
-dataset_file = 'updated_pollution_dataset.csv'
+dataset_file = 'final_pollution_dataset.csv'
 attributes = ['SO2', 'CO', 'Proximity_to_Industrial_Areas']  # Two selected attributes
 k = 6
 p = 4
