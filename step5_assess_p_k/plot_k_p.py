@@ -98,8 +98,8 @@ chosen_header, training_data, validation_data, test_data, labels = initData(
 )
 
 # Initialize 2D arrays with zeros
-k_range = range(1, 10)
-p_range = range(1, 6)
+k_range = range(1, 20)
+p_range = range(1, 10)
 val_accuracies = [[0 for _ in p_range] for _ in k_range]
 test_accuracies = [[0 for _ in p_range] for _ in k_range]
 

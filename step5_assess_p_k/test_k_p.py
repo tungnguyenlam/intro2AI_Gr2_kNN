@@ -1,6 +1,8 @@
 import csv
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # -------------------------------------------------------------------
 # 1. Define all functions at the top level.
@@ -105,8 +107,8 @@ if __name__ == "__main__":
 
     # Split ratios
     training_ratio = 0.7
-    validation_ratio = 0.2
-    test_ratio = 0.1
+    validation_ratio = 0.1
+    test_ratio = 0.2
 
     # Load the data
     chosen_header, training_data, validation_data, test_data, labels = initData(
@@ -118,8 +120,8 @@ if __name__ == "__main__":
     )
 
     # Define your k and p ranges
-    k_values = list(range(1, 10))  # k from 1 to 9
-    p_values = list(range(1, 6))   # p from 1 to 5
+    k_values = list(range(1, 20))  # k from 1 to 9
+    p_values = list(range(1, 10))   # p from 1 to 5
 
     # Create matrices to store validation & test accuracies
     val_accuracies = np.zeros((len(k_values), len(p_values)))
@@ -162,3 +164,33 @@ if __name__ == "__main__":
 
     print("\nTest Accuracies Matrix:")
     print(test_accuracies)
+
+# Plot heatmaps
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+# Validation accuracy heatmap
+sns.heatmap(val_accuracies, annot=True, fmt='.3f', 
+            xticklabels=p_values, yticklabels=k_values,
+            ax=ax1, cmap='viridis')
+ax1.set_title('Validation Accuracy')
+ax1.set_xlabel('p value')
+ax1.set_ylabel('k value')
+
+# Test accuracy heatmap
+sns.heatmap(test_accuracies, annot=True, fmt='.3f',
+            xticklabels=p_values, yticklabels=k_values,
+            ax=ax2, cmap='viridis')
+ax2.set_title('Test Accuracy')
+ax2.set_xlabel('p value')
+ax2.set_ylabel('k value')
+
+plt.tight_layout()
+plt.savefig('k_p_accuracy_heatmap.png')
+plt.show()
+
+# Accuracy before scale
+# Compute accuracy
+acc_val = compute_accuracy(training_data, validation_data, k, p)
+acc_test = compute_accuracy(training_data, test_data, k, p)
+print(f"Validation accuracy: {acc_val:.3f}")
+print(f"Test accuracy: {acc_test:.3f}")

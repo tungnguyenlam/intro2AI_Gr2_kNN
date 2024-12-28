@@ -141,7 +141,7 @@ grid_step = 0.1  # Grid step size for faster computation
 # Split ratios
 training_ratio = 0.7
 validation_ratio = 0.2
-test_ratio = 0.5
+test_ratio = 0.1
 
 # Load data
 chosen_header, training_data, validation_data, test_data, labels = initData(
