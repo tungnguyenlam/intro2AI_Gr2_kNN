@@ -54,3 +54,11 @@ The output and conclusion of Methodology in the Final Report follow the followin
 - if choose 3 attributes, plot decision map in 3 angles (1-2, 2-3, 1-3)
 - decision map for 2 attribute will help to classify a given point
 - decision map for 3 attribute WILL NOT help to classify a point, because we are essentially taking 3 slices of the decision space
+
+
+## "all_in_one.ipynb"
+- This code does majority of what we are doing, including: Split the dataset, apply kNN algorithm to the whole validation set and testing set. 
+- Take a sample point and classify it
+- Scale the dataset
+- Print out the classification/decision map
+
