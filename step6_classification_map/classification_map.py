@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
+
+# Initialize the data
 def initData(filename, training_ratio, validation_ratio, test_ratio, attributes):
     with open(filename, 'r', newline='') as file:
         file_csv = csv.reader(file)
@@ -63,16 +65,6 @@ def knn(training_data, new_point, k, p):
     
     return max(votes, key=votes.get)
 
-def compute_accuracy(training_data, data, k, p):
-
-    if not data:
-        return 0
-    correct = sum(
-        knn(training_data, point[:-1], k, p) == point[-1]
-        for point in data
-    )
-    return correct / len(data)
-
 def plot_decision_map(training_data, attributes, k, p, grid_step):
     print("[DEBUG] Generating decision map... This can take time if the range is large.")
     
@@ -127,42 +119,49 @@ def plot_decision_map(training_data, attributes, k, p, grid_step):
     # Labels, title, and legend
     ax.set_xlabel(attributes[0], fontsize=12)
     ax.set_ylabel(attributes[1], fontsize=12)
-    ax.set_title(f"Decision Boundaries: {attributes[0]} vs {attributes[1]}\nk={k}, p={p}", fontsize=14, pad=15)
+    ax.set_title(f"Decision Boundaries: {attributes[0]} vs {attributes[1]}\nk={k}, p={p}, gridstep={grid_step}", fontsize=14, pad=15)
     ax.legend(title="Classes", bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
     ax.grid(True, linestyle='--', alpha=0.5)
     
     # Save and display the figure
     plt.tight_layout()
-    out_filename = f"decision_map_{attributes[0]}_{attributes[1]}_k{k}_p{p}.png"
+    out_filename = f"dec_map_{attributes[0]}_{attributes[1]}_k{k}_p{p}_gridstep{grid_step}.png"
     plt.savefig(out_filename, dpi=300, bbox_inches='tight')
     print(f"[DEBUG] Decision map saved as '{out_filename}'")
     
     plt.show()
     plt.close()
 
-def main():
-    dataset_file = 'updated_pollution_dataset.csv'
-    attributes = ['Temperature', 'SO2']  # Two selected attributes
-    k = 6
-    p = 4
-    grid_step = 1.0  # Grid step size for faster computation
-    
-    # Split ratios
-    training_ratio = 0.7
-    validation_ratio = 0.2
-    test_ratio = 0.1
-    
-    # Load data
-    chosen_header, training_data, validation_data, test_data, labels = initData(
-        filename=dataset_file,
-        training_ratio=training_ratio,
-        validation_ratio=validation_ratio,
-        test_ratio=test_ratio,
-        attributes=attributes
-    )
-    
-    # Plot decision map
-    plot_decision_map(training_data, attributes, k, p, grid_step)
+dataset_file = 'final_pollution_dataset.csv'
+attributes = ['SO2', 'CO', 'Proximity_to_Industrial_Areas']  # Two selected attributes
+k = 6
+p = 4
+grid_step = 0.1  # Grid step size for faster computation
 
-if __name__ == '__main__':
-    main()
+# Split ratios
+training_ratio = 0.7
+validation_ratio = 0.2
+test_ratio = 0.1
+
+# Load data
+chosen_header, training_data, validation_data, test_data, labels = initData(
+    filename=dataset_file,
+    training_ratio=training_ratio,
+    validation_ratio=validation_ratio,
+    test_ratio=test_ratio,
+    attributes=attributes
+)
+
+# 2D 2D 2D 2D
+# Plot decision map 2D
+if len(attributes) == 2:
+    plot_decision_map(training_data, attributes, k, p, grid_step)
+elif len(attributes) == 3:
+    print("3D plot")
+    # Plot decision from 3 angles
+    training_data_01 = [[row[0], row[1], row[-1]] for row in training_data]
+    training_data_12 = [[row[1], row[2], row[-1]] for row in training_data]
+    training_data_02 = [[row[0], row[2], row[-1]] for row in training_data]
+    plot_decision_map(training_data_01, attributes[:2], k, p, grid_step)
+    plot_decision_map(training_data_12, attributes[1:], k, p, grid_step)
+    plot_decision_map(training_data_02, [attributes[0], attributes[2]], k, p, grid_step)
