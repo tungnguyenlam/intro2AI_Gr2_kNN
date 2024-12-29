@@ -4,18 +4,18 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 # Load training data
-training = pd.read_csv("Training_set.csv", usecols=['SO2', 'CO', 'Proximity_to_Industrial_Areas', 'Air Quality'])
+training = pd.read_csv("FinalTrain_set.csv", usecols=['SO2', 'CO', 'Proximity_to_Industrial_Areas', 'Air Quality'])
 training_array = training[['SO2', 'CO', 'Proximity_to_Industrial_Areas']].to_numpy()
 category_array = training['Air Quality'].to_numpy()
 
 
 #Load validating data
-validating= pd.read_csv("Validating_set.csv", usecols= ['SO2', 'CO', 'Proximity_to_Industrial_Areas', 'Air Quality'])
+validating= pd.read_csv("FinalVal_set.csv", usecols= ['SO2', 'CO', 'Proximity_to_Industrial_Areas', 'Air Quality'])
 validating_array= validating[['SO2', 'CO', 'Proximity_to_Industrial_Areas']].to_numpy()
 valcat_array= validating['Air Quality'].to_numpy()
 
 #Load testing data
-testing= pd.read_csv("Test_set.csv", usecols= ['SO2', 'CO', 'Proximity_to_Industrial_Areas', 'Air Quality'])
+testing= pd.read_csv("FinalTest_set.csv", usecols= ['SO2', 'CO', 'Proximity_to_Industrial_Areas', 'Air Quality'])
 test_array= testing[['SO2', 'CO', 'Proximity_to_Industrial_Areas']].to_numpy()
 testcat_array= testing['Air Quality'].to_numpy()
 
@@ -67,7 +67,7 @@ s_train_scaled= scaler.fit_transform(training_array)
 s_test_scaled= scaler.fit_transform(test_array)
 s_val_scaled= scaler.fit_transform(validating_array)
 # Perform prediction on the validation and test sets
-ks = np.arange(1,21)
+ks = np.arange(1,31)
 accuracy_train={}
 accuracy_val={}
 accuracy_test={}
