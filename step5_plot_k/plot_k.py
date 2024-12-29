@@ -28,13 +28,6 @@ def minkowski_distance(x, y):
         sum += abs(x[i] - y[i])**p
     return sum ** (1 / p)
 
-# Function to categorize a point
-def categorize(point):
-    for i in range(len(training_array)):
-        if np.array_equal(training_array[i], point):
-            return category_array[i]
-    return None
-
 # K-Nearest Neighbors (KNN) function
 def KNN(trainSet, trainLabels, point, k):
     distances = []
@@ -74,18 +67,16 @@ s_train_scaled= scaler.fit_transform(training_array)
 s_test_scaled= scaler.fit_transform(test_array)
 s_val_scaled= scaler.fit_transform(validating_array)
 # Perform prediction on the validation and test sets
-ks = np.arange(1,20)
+ks = np.arange(1,21)
 accuracy_train={}
 accuracy_val={}
 accuracy_test={}
 for k in ks:
-    train_pred= predict(s_train_scaled, s_train_scaled, category_array, k)
+    
     val_pred = predict(s_val_scaled, s_train_scaled, category_array, k)
     test_pred = predict(s_test_scaled, s_train_scaled, category_array, k)
     print("k=",k)
-    # Calculate accuracy of training set
-    accuracy_train[k]= accuracy_score(category_array, train_pred)
-    print("Training accuracy: ", accuracy_train[k])
+    
     # Calculate accuracy of validation set
     accuracy_val[k] = accuracy_score(valcat_array, val_pred)
     print("Validation accuracy: ", accuracy_val[k])

@@ -1,10 +1,18 @@
 # intro2AI_Gr2_kNN
+The code base of the project is avaiable at: https://github.com/usthTonyNguyen/intro2AI_Gr2_kNN
+Link to original dataset: https://www.kaggle.com/datasets/mujtabamatin/air-quality-and-pollution-assessment
 This is the repository for the Final Group Project (Introduction to AI) on k-nearest neighbors (Group 2)
 Members: (Everyone put your info here: Github username - Full name - StudentID - USTH email address)
 hngoc2204 - Nguyen Vu Hong Ngoc - 23BI14345 - ngocnvh.23bi14345@usth.edu.vn
-usthTonyNguyen - Nguyen Lam Tung - 23BI14446 - tungnl.23bi14446@usth.edu.vn
-Palm-Pham - Pham Dinh Bao Khoi - 23BI 
+usthTonyNguyen - Nguyen Lam Tung (Leader) - 23BI14446 - tungnl.23bi14446@usth.edu.vn
+Palm-Pham - Pham Dinh Bao Khoi - 23BI14230 - khoipdb.23bi14230@usth.edu.vn
+Lehoangdat123 - Le Hoang Dat - 23BI14087 - datlh.23bi14087@usth.edu.vn
 watermelon-3012 - Le Sy Han - 23BI14150 - hanls.23bi14150@usth.edu.vn
+Beno1tP - Pham Quang Minh - 23BI14296 - minhpq.23bi14296@usth.edu.vn	
+
+## Note
+- The original dataset is named "updated_pollution_dataset.csv"
+- The processed dataset (which most of the code is based to run) is named "final_pollution_dataset.csv"
 
 Project requirements: (Need to improve)
 - Implement k-nearest neighbors on a new dataset and train a model on it
@@ -54,3 +62,10 @@ The output and conclusion of Methodology in the Final Report follow the followin
 - if choose 3 attributes, plot decision map in 3 angles (1-2, 2-3, 1-3)
 - decision map for 2 attribute will help to classify a given point
 - decision map for 3 attribute WILL NOT help to classify a point, because we are essentially taking 3 slices of the decision space
+
+
+## "all_in_one.ipynb"
+- This code does majority of what we are doing, including: Split the dataset, apply kNN algorithm to the whole validation set and testing set. 
+- Take a sample point and classify it
+- Scale the dataset
+- Print out the classification/decision map

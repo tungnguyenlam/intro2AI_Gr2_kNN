@@ -1,8 +1,10 @@
 import csv
 import numpy as np
-from concurrent.futures import ProcessPoolExecutor
-import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
+from concurrent.futures import ProcessPoolExecutor
+import multiprocessing
+from functools import partial
 
 # -------------------------------------------------------------------
 # 1. Define all functions at the top level.
@@ -86,31 +88,56 @@ def compute_accuracy(training_data, data, k, p):
             correct += 1
     return correct / len(data)
 
+
+
 def compute_accuracies_for_k_p(args):
-    """
-    Multiprocessing helper function.
-    args: (i, j, k, p, training_data, validation_data, test_data)
-    Returns: (i, j, val_acc, test_acc)
-    """
-    i, j, k, p, training_data, validation_data, test_data = args
+    k, p, training_data, validation_data, test_data = args
     val_acc = compute_accuracy(training_data, validation_data, k, p)
     test_acc = compute_accuracy(training_data, test_data, k, p)
-    return i, j, val_acc, test_acc
+    return k, p, val_acc, test_acc
 
-# -------------------------------------------------------------------
-# 2. Main guard to prevent issues on Windows/macos spawn methods.
-# -------------------------------------------------------------------
-if __name__ == "__main__":
-    # Specify your CSV file and attributes here
-    dataset_file = 'final_pollution_dataset.csv'
-    attributes = ['SO2', 'CO', 'Proximity_to_Industrial_Areas']  
+from sklearn.preprocessing import StandardScaler
 
-    # Split ratios
-    training_ratio = 0.7
-    validation_ratio = 0.1
-    test_ratio = 0.2
+def scale_data(training_data, validation_data, test_data):
+    """
+    Scale features using StandardScaler while preserving labels
+    """
+    # Extract features and labels
+    train_features = np.array([row[:-1] for row in training_data])
+    val_features = np.array([row[:-1] for row in validation_data])
+    test_features = np.array([row[:-1] for row in test_data])
+    
+    # Get labels
+    train_labels = [row[-1] for row in training_data]
+    val_labels = [row[-1] for row in validation_data]
+    test_labels = [row[-1] for row in test_data]
+    
+    # Scale features
+    scaler = StandardScaler()
+    train_scaled = scaler.fit_transform(train_features)
+    val_scaled = scaler.transform(val_features)
+    test_scaled = scaler.transform(test_features)
+    
+    # Combine scaled features with labels
+    training_scaled = [list(features) + [label] for features, label in zip(train_scaled, train_labels)]
+    validation_scaled = [list(features) + [label] for features, label in zip(val_scaled, val_labels)]
+    test_scaled = [list(features) + [label] for features, label in zip(test_scaled, test_labels)]
+    
+    return training_scaled, validation_scaled, test_scaled
 
-    # Load the data
+dataset_file = 'final_pollution_dataset.csv'
+attributes = ['NO2','CO', 'Proximity_to_Industrial_Areas'] 
+k = 15
+p = 3
+grid_step = 0.05  # Grid step size for faster computation
+
+# Split ratios
+training_ratio = 0.7
+validation_ratio = 0.1
+test_ratio = 0.2
+
+def main():
+    # Load and prepare data
     chosen_header, training_data, validation_data, test_data, labels = initData(
         filename=dataset_file,
         training_ratio=training_ratio,
@@ -118,79 +145,68 @@ if __name__ == "__main__":
         test_ratio=test_ratio,
         attributes=attributes
     )
+    training_data, validation_data, test_data = scale_data(training_data, validation_data, test_data)
 
-    # Define your k and p ranges
-    k_values = list(range(1, 20))  # k from 1 to 9
-    p_values = list(range(1, 10))   # p from 1 to 5
-
-    # Create matrices to store validation & test accuracies
+    # Setup parameters
+    k_values = range(1, 20)
+    p_values = range(1, 10)
+    
+    # Initialize accuracy matrices
     val_accuracies = np.zeros((len(k_values), len(p_values)))
     test_accuracies = np.zeros((len(k_values), len(p_values)))
-
-    # -------------------------------------------------------------------
-    # 3. Prepare the argument list for parallel computations.
-    # -------------------------------------------------------------------
-    args_list = []
-    for i, k in enumerate(k_values):
-        for j, p in enumerate(p_values):
-            args_list.append((i, j, k, p, training_data, validation_data, test_data))
-
-    # -------------------------------------------------------------------
-    # 4. Run parallel computations using ProcessPoolExecutor
-    # -------------------------------------------------------------------
-    total_tasks = len(args_list)
-    print(f"Starting parallel computation for {total_tasks} (k, p) combinations...")
-
-    with ProcessPoolExecutor() as executor:
-        # We iterate as results come in
-        for idx, (i, j, val_acc, test_acc) in enumerate(executor.map(compute_accuracies_for_k_p, args_list)):
-            val_accuracies[i][j] = val_acc
-            test_accuracies[i][j] = test_acc
-
-            # Optional: print progress every 5 tasks
-            if (idx + 1) % 5 == 0:
-                print(f"Processed {idx + 1}/{total_tasks} tasks...")
-
-    # -------------------------------------------------------------------
-    # 5. Print final results
-    # -------------------------------------------------------------------
+    
+    # Prepare arguments for parallel processing
+    args_list = [
+        (k, p, training_data, validation_data, test_data)
+        for k in k_values
+        for p in p_values
+    ]
+    
+    # Compute accuracies in parallel
+    print(f"Starting parallel computation for {len(args_list)} (k, p) combinations...")
+    
+    with ProcessPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
+        results = list(executor.map(compute_accuracies_for_k_p, args_list))
+        
+    # Process results
+    for k, p, val_acc, test_acc in results:
+        i = k - 1  # Adjust for 0-based indexing
+        j = p - 1
+        val_accuracies[i][j] = val_acc
+        test_accuracies[i][j] = test_acc
+        
+    # Print results
     print("\nFinal Results:")
     for i, k in enumerate(k_values):
         for j, p in enumerate(p_values):
-            print(f"k={k}, p={p} -> val_acc={val_accuracies[i][j]:.3f}, test_acc={test_accuracies[i][j]:.3f}")
+            print(f"k={k}, p={p} -> val_acc={val_accuracies[i][j]:.3f}, "
+                  f"test_acc={test_accuracies[i][j]:.3f}")
+    
+    # Plot results
+    plot_heatmaps(val_accuracies, test_accuracies, k_values, p_values)
 
-    print("\nValidation Accuracies Matrix:")
-    print(val_accuracies)
+def plot_heatmaps(val_accuracies, test_accuracies, k_values, p_values):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+    
+    # Validation accuracy heatmap
+    sns.heatmap(val_accuracies, annot=True, fmt='.3f',
+                xticklabels=p_values, yticklabels=k_values,
+                ax=ax1, cmap='viridis')
+    ax1.set_title('Validation Accuracy')
+    ax1.set_xlabel('p value')
+    ax1.set_ylabel('k value')
+    
+    # Test accuracy heatmap
+    sns.heatmap(test_accuracies, annot=True, fmt='.3f',
+                xticklabels=p_values, yticklabels=k_values,
+                ax=ax2, cmap='viridis')
+    ax2.set_title('Test Accuracy')
+    ax2.set_xlabel('p value')
+    ax2.set_ylabel('k value')
+    
+    plt.tight_layout()
+    plt.savefig('k_p_accuracy_heatmap.png', dpi=300, bbox_inches='tight')
+    plt.close()
 
-    print("\nTest Accuracies Matrix:")
-    print(test_accuracies)
-
-# Plot heatmaps
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-
-# Validation accuracy heatmap
-sns.heatmap(val_accuracies, annot=True, fmt='.3f', 
-            xticklabels=p_values, yticklabels=k_values,
-            ax=ax1, cmap='viridis')
-ax1.set_title('Validation Accuracy')
-ax1.set_xlabel('p value')
-ax1.set_ylabel('k value')
-
-# Test accuracy heatmap
-sns.heatmap(test_accuracies, annot=True, fmt='.3f',
-            xticklabels=p_values, yticklabels=k_values,
-            ax=ax2, cmap='viridis')
-ax2.set_title('Test Accuracy')
-ax2.set_xlabel('p value')
-ax2.set_ylabel('k value')
-
-plt.tight_layout()
-plt.savefig('k_p_accuracy_heatmap.png')
-plt.show()
-
-# Accuracy before scale
-# Compute accuracy
-acc_val = compute_accuracy(training_data, validation_data, k, p)
-acc_test = compute_accuracy(training_data, test_data, k, p)
-print(f"Validation accuracy: {acc_val:.3f}")
-print(f"Test accuracy: {acc_test:.3f}")
+if __name__ == '__main__':
+    main()
