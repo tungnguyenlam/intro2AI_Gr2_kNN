@@ -2,9 +2,11 @@
 This is the repository for the Final Group Project (Introduction to AI) on k-nearest neighbors (Group 2)
 Members: (Everyone put your info here: Github username - Full name - StudentID - USTH email address)
 hngoc2204 - Nguyen Vu Hong Ngoc - 23BI14345 - ngocnvh.23bi14345@usth.edu.vn
-usthTonyNguyen - Nguyen Lam Tung - 23BI14446 - tungnl.23bi14446@usth.edu.vn
-Palm-Pham - Pham Dinh Bao Khoi - 23BI 
+usthTonyNguyen - Nguyen Lam Tung (Leader) - 23BI14446 - tungnl.23bi14446@usth.edu.vn
+Palm-Pham - Pham Dinh Bao Khoi - 23BI14230 - khoipdb.23bi14230@usth.edu.vn
+Lehoangdat123 - Le Hoang Dat - 23BI14087 - datlh.23bi14087@usth.edu.vn
 watermelon-3012 - Le Sy Han - 23BI14150 - hanls.23bi14150@usth.edu.vn
+
 
 Project requirements: (Need to improve)
 - Implement k-nearest neighbors on a new dataset and train a model on it
@@ -61,4 +63,3 @@ The output and conclusion of Methodology in the Final Report follow the followin
 - Take a sample point and classify it
 - Scale the dataset
 - Print out the classification/decision map
-
